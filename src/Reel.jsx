@@ -11,11 +11,11 @@ const Reel = ({ classNames, winnerIndex = 0, names, reel }) => {
   const [spinning, setSpinning] = useState(true);
 
   const speed = useMotionValue(0);
-  const speedSpring = useSpring(speed, { stiffness: 10, damping: 10 });
+  const speedSpring = useSpring(speed, { bounce: 0, duration: 50 });
   const blur = useMotionValue(0);
-  const blurSpring = useSpring(blur, { stiffness: 10, damping: 10 });
-  const wobble = useMotionValue(3);
-  const wobbleSpring = useSpring(wobble, { stiffness: 555, damping: 5 });
+  const blurSpring = useSpring(blur, { bounce: 0, duration: 50 });
+  const wobble = useMotionValue(-3);
+  const wobbleSpring = useSpring(wobble, { bounce: 0.5, duration: 5 });
 
   useEffect(() => {
     const generatedNames = names.map((name, i) =>
@@ -27,8 +27,8 @@ const Reel = ({ classNames, winnerIndex = 0, names, reel }) => {
 
   useEffect(() => {
     const t1 = setTimeout(() => {
-      speed.set(-50);
-      blur.set(15);
+      speed.set(-2);
+      blur.set(5);
     }, 1000 + reel * 333);
 
     const t2 = setTimeout(() => {
@@ -103,21 +103,21 @@ const Reel = ({ classNames, winnerIndex = 0, names, reel }) => {
               activeNames.length,
               reel,
               spinning ? speedSpring.get() : speed.get(),
-              delta / 50
+              delta
             )
           )
         );
       }
     } else {
       setActiveNames(
-        activeNames.map((name) =>
-          moveName(
+        activeNames.map((name) => {
+          return moveName(
             name,
             activeNames.length,
             reel,
             wobbleSpring.get(),
-            delta / 50
-          )
+            delta
+          )}
         )
       );
     }
